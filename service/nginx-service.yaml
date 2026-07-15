@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-service  # Service명
+spec:
+  # Service의 종류 정의
+  #  - NodePort : 쿠버네티스 내부에서 해당 서비스에 접속하기 위한 포트를 열고, 외부에서 접근 가능하도록 설정
+  #  - ClusterIP : 쿠버네티스 내부에서만 통신이 가능한 IP를 부여, 외부에서 접근 불가
+  #  - LoadBalancer : 외부의 로드밸런서(AWS의 LB 등)을 활용해서 외부에서 접속할 수 있도록 설정
+  type: NodePort
+  selector:
+    app: nginx-app  # 디플로이먼트의 `spec.template.metadata.labels.app`이 'nginx-app'으로 시작하고, 실행되고 있는 파드와 연결
+  ports:
+  - protocol: TCP
+    targetPort: 80  # 맵핑할 Pod 포트
+    port: 80  # 쿠버네티스 내부에서 서비스에 접속할 포트번호
+    nodePort: 30080  # 노드 외부에서 접근할 포트
